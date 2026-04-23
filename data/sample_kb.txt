@@ -1,0 +1,142 @@
+SHOPEASE E-COMMERCE CUSTOMER SUPPORT KNOWLEDGE BASE
+====================================================
+Version 3.2 | Updated April 2026
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1: RETURN & REFUND POLICY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1.1 Standard Return Window
+Customers may return most items within 30 days of the delivery date for a full refund. Items must be in their original, unused condition with all original packaging, tags, and accessories included. Returns initiated after 30 days but within 60 days may be eligible for store credit only, at ShopEase's discretion.
+
+1.2 Non-Returnable Items
+The following items cannot be returned under any circumstances:
+- Digital products (software licenses, e-books, digital downloads)
+- Perishable goods (food, plants, flowers)
+- Personalized or custom-engraved items
+- Intimate apparel (underwear, swimwear) for hygiene reasons
+- Hazardous materials or items with broken safety seals
+- Gift cards and store credit vouchers
+
+1.3 How to Initiate a Return
+To start a return, visit the "My Orders" section in your ShopEase account, select the item you wish to return, and click "Request Return." You will receive a prepaid return shipping label via email within 24 hours. Drop the package at any authorized shipping partner location. Alternatively, call our support line at 1-800-SHOPEASE (1-800-746-7327) Monday–Friday 9AM–6PM EST.
+
+1.4 Refund Processing Timeline
+Once your returned item is received and inspected at our warehouse (typically 3-5 business days after we receive it), your refund will be processed:
+- Credit/Debit Card: 5-10 business days to appear on statement
+- PayPal: 3-5 business days
+- Store Credit: Immediate upon approval
+- Buy Now Pay Later (Afterpay, Klarna): Refunded to your BNPL account within 7 days
+
+1.5 Damaged or Defective Items
+If you received a damaged or defective item, contact us within 7 days of delivery. We will arrange a free return and either replace the item at no cost or issue a full refund including original shipping fees. Please retain all packaging materials and take photos of the damage before contacting us.
+
+1.6 Wrong Item Received
+If you received the wrong item, contact us immediately. We will arrange free pickup of the incorrect item and expedited shipping of the correct item at no additional charge. You will not be charged for the wrong item during this period.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2: SHIPPING & DELIVERY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+2.1 Shipping Options and Timeframes
+ShopEase offers the following shipping options:
+- Standard Shipping: 5-7 business days — FREE on orders over $50, $4.99 otherwise
+- Express Shipping: 2-3 business days — $9.99
+- Overnight Shipping: Next business day (order by 2PM EST) — $24.99
+- Same-Day Delivery (select metro areas): Available for orders placed before 12PM local time — $14.99
+
+2.2 Order Processing Time
+All orders are processed within 1-2 business days (Monday–Friday, excluding public holidays). Orders placed on weekends or holidays will begin processing on the next business day. During peak seasons (Black Friday, holiday season, Prime Day equivalent), processing may take up to 3 business days.
+
+2.3 Tracking Your Order
+Once your order ships, you will receive an email with your tracking number. Track your order at shopease.com/track or directly on the carrier's website. Tracking updates may take up to 24 hours to appear after shipment. If tracking shows no update for more than 3 business days, contact our support team.
+
+2.4 International Shipping
+ShopEase ships to over 45 countries worldwide. International shipping rates and delivery times vary by destination. Customers are responsible for any customs duties, import taxes, or brokerage fees imposed by their country. ShopEase is not responsible for delays caused by customs processing. Standard international delivery: 10-21 business days.
+
+2.5 Missing or Lost Packages
+If your tracking shows delivered but you have not received your package:
+1. Check with neighbors and building management
+2. Look for carrier delivery attempt notices
+3. Wait 24-48 hours as packages are sometimes marked delivered early
+4. If still not found, contact us to file a missing package claim. Claims must be filed within 30 days of the marked delivery date.
+
+2.6 Shipping Address Changes
+Shipping address changes can be made within 1 hour of placing your order by contacting our support team. After 1 hour, your order may already be in processing and address changes cannot be guaranteed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3: PAYMENT & BILLING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3.1 Accepted Payment Methods
+ShopEase accepts the following payment methods:
+- Visa, Mastercard, American Express, Discover
+- PayPal and PayPal Credit
+- Apple Pay and Google Pay
+- Shop Pay (Shopify Payments)
+- Buy Now Pay Later: Afterpay (4 interest-free payments), Klarna (3 or 6 month plans)
+- ShopEase Gift Cards and Store Credit
+- Bank Transfer (for orders over $500)
+
+3.2 Payment Security
+All transactions on ShopEase are secured with 256-bit SSL encryption. We are PCI DSS Level 1 compliant, the highest level of payment security. We never store full credit card numbers on our servers. All card data is tokenized and processed through our certified payment partners.
+
+3.3 Applying Discount Codes
+To apply a discount code, add items to your cart and proceed to checkout. Enter your code in the "Discount Code" or "Promo Code" field on the checkout page and click "Apply." Only one discount code can be applied per order (unless stated otherwise). Discount codes cannot be applied retroactively to completed orders. If your code is not working, ensure it has not expired and check minimum order requirements.
+
+3.4 Price Match Policy
+ShopEase offers a 7-day price match guarantee. If you find the identical item (same model, color, size) at a lower price on a qualifying competitor's website, contact us within 7 days of purchase. We will refund the price difference. The competing retailer must be an authorized dealer with the item in stock. Marketplace listings (Amazon third-party, eBay, etc.) do not qualify.
+
+3.5 Invoice and Receipts
+Email receipts are automatically sent after each purchase. To download an invoice, go to "My Orders" in your account, select the order, and click "Download Invoice." Invoices are available for up to 5 years after purchase. For business/GST invoices, contact our business support team with your GST number and order details.
+
+3.6 Failed Payments
+If your payment fails, first verify your card details and billing address match exactly. Ensure your card has sufficient funds and is not restricted for online purchases. Try a different payment method or contact your bank to authorize the transaction. If problems persist, contact ShopEase support.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4: ACCOUNT MANAGEMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+4.1 Creating an Account
+Creating a ShopEase account is free and optional (guest checkout is available). An account lets you track orders, save addresses, manage returns, access order history, and earn ShopEase Rewards points. Sign up at shopease.com/register with your email address.
+
+4.2 Password Reset
+To reset your password, click "Forgot Password" on the login page. Enter your registered email address and we will send a reset link within 5 minutes. The link expires in 60 minutes. If you don't receive the email, check your spam folder or try a different email address.
+
+4.3 ShopEase Rewards Program
+ShopEase Rewards members earn 1 point per $1 spent. Points can be redeemed at checkout ($1 off per 100 points). Special bonus points are available during promotional events. Points expire after 12 months of account inactivity. Tier levels: Silver (0-499 points), Gold (500-1999 points), Platinum (2000+ points). Platinum members receive free express shipping on all orders.
+
+4.4 Deleting Your Account
+To delete your account, contact our support team. We will verify your identity and process the deletion within 30 days. Note that account deletion is permanent and will erase order history, rewards points, and saved preferences. We retain transaction records for legal compliance purposes for up to 7 years.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5: PRODUCTS & WARRANTY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1 Product Authenticity
+All products sold on ShopEase are 100% authentic and sourced directly from authorized manufacturers or distributors. We maintain a zero-tolerance policy for counterfeit goods. If you receive a product you suspect is counterfeit, contact us immediately for a full refund and investigation.
+
+5.2 Manufacturer Warranty
+Most products come with a manufacturer's warranty. Warranty duration and terms vary by product and manufacturer. To claim a manufacturer's warranty, contact the manufacturer directly with your proof of purchase. ShopEase can assist in connecting you with manufacturer support if needed.
+
+5.3 ShopEase Extended Warranty
+For eligible electronics, appliances, and high-value items, ShopEase offers extended warranty plans (1, 2, or 3 years) at checkout. Extended warranties cover manufacturing defects and mechanical failures. Accidental damage is not covered unless you purchased the "Accident Protection" add-on.
+
+5.4 Product Availability
+"In Stock" items ship within 1-2 business days. "Pre-Order" items ship on or before the listed release date. "Backordered" items will ship once stock is replenished (estimated date shown). You will not be charged for backordered items until they ship. You may cancel a backorder at any time before shipment.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6: CONTACT & ESCALATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6.1 Contact Methods
+- Live Chat: Available 24/7 on shopease.com
+- Phone: 1-800-SHOPEASE (Mon-Fri 9AM-6PM EST)
+- Email: support@shopease.com (response within 24 hours)
+- Social Media: @ShopEaseSupport on Twitter/X
+
+6.2 Escalation Process
+If you are not satisfied with the resolution provided, ask to speak with a senior support specialist. If still unresolved, you may request a formal review by our Customer Relations team (response within 3 business days). For disputes involving amounts over $500, we may offer mediation through a neutral third party.
+
+6.3 Accessibility Support
+ShopEase is committed to accessibility. Customers who require assistance due to a disability may contact our dedicated accessibility support line for personalized assistance with ordering, returns, and account management.

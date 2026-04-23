@@ -1,0 +1,13 @@
+{
+  "query_id": "ac73d69f-693f-4e8a-a9d3-f8858448ee0c",
+  "session_id": "sess-tteng85s",
+  "user_query": "i wanna sue your company",
+  "intent": "ESCALATE",
+  "escalation_reason": "",
+  "retrieved_chunks": [],
+  "timestamp": "2026-04-23T02:09:13.102028Z",
+  "status": "RESOLVED",
+  "human_response": "im sorry to hear that\nwill respond quickly",
+  "agent_id": "human_agent",
+  "resolved_at": "2026-04-23T02:09:45.288146Z"
+}

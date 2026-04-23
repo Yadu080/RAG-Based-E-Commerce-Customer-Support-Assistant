@@ -1,0 +1,42 @@
+{
+  "query_id": "4ab502f0-4be5-4002-909d-a63e2b0c0f19",
+  "session_id": "test",
+  "user_query": "I want to sue your company for fraud",
+  "intent": "ESCALATE",
+  "escalation_reason": "",
+  "retrieved_chunks": [
+    {
+      "text": "OPEASE (1-800-746-7327) Monday\u2013Friday 9AM\u20136PM EST. 1.4 Refund Processing Timeline\nOnce your returned item is received and inspected at our warehouse (typically 3-5 business days after we receive it), your refund will be processed:\n- Credit/Debit Card: 5-10 business days to appear on statement\n- PayPal: 3-5 business days\n- Store Credit: Immediate upon approval\n- Buy Now Pay Later (Afterpay, Klarna): Refunded to your BNPL account within 7 days",
+      "score": 0.6377,
+      "source": "sample_kb.txt",
+      "page": 4,
+      "chunk_index": 6
+    },
+    {
+      "text": "e for store credit only, at ShopEase's discretion. 1.2 Non-Returnable Items\nThe following items cannot be returned under any circumstances:\n- Digital products (software licenses, e-books, digital downloads)\n- Perishable goods (food, plants, flowers)\n- Personalized or custom-engraved items\n- Intimate apparel (underwear, swimwear) for hygiene reasons\n- Hazardous materials or items with broken safety seals\n- Gift cards and store credit vouchers",
+      "score": 0.6309,
+      "source": "sample_kb.txt",
+      "page": 4,
+      "chunk_index": 4
+    },
+    {
+      "text": "afety seals\n- Gift cards and store credit vouchers 1.3 How to Initiate a Return\nTo start a return, visit the \"My Orders\" section in your ShopEase account, select the item you wish to return, and click \"Request Return.\" You will receive a prepaid return shipping label via email within 24 hours. Drop the package at any authorized shipping partner location. Alternatively, call our support line at 1-800-SHOPEASE (1-800-746-7327) Monday\u2013Friday 9AM\u20136PM EST.",
+      "score": 0.6301,
+      "source": "sample_kb.txt",
+      "page": 4,
+      "chunk_index": 5
+    },
+    {
+      "text": "ndard international delivery: 10-21 business days. 2.5 Missing or Lost Packages\nIf your tracking shows delivered but you have not received your package:\n1. Check with neighbors and building management\n2. Look for carrier delivery attempt notices\n3. Wait 24-48 hours as packages are sometimes marked delivered early\n4. If still not found, contact us to file a missing package claim. Claims must be filed within 30 days of the marked delivery date.",
+      "score": 0.629,
+      "source": "sample_kb.txt",
+      "page": 6,
+      "chunk_index": 14
+    }
+  ],
+  "timestamp": "2026-04-23T02:04:46.516421Z",
+  "status": "RESOLVED",
+  "human_response": "We apologize for the inconvenience. A manager will contact you within 1 hour.",
+  "agent_id": "agent_1",
+  "resolved_at": "2026-04-23T02:04:46.525435Z"
+}

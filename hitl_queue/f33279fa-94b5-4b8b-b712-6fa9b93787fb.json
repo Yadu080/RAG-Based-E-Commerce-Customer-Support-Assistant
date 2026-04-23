@@ -1,0 +1,13 @@
+{
+  "query_id": "f33279fa-94b5-4b8b-b712-6fa9b93787fb",
+  "session_id": "sess-tteng85s",
+  "user_query": "whats the return policy",
+  "intent": "RETURN_REQUEST",
+  "escalation_reason": "",
+  "retrieved_chunks": [],
+  "timestamp": "2026-04-23T02:10:05.192637Z",
+  "status": "PENDING",
+  "human_response": null,
+  "agent_id": null,
+  "resolved_at": null
+}

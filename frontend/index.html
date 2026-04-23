@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ShopEase AI Support — RAG Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── CSS Reset & Variables ──────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:          #f0f4f8;
+  --surface:     #ffffff;
+  --surface2:    #f8fafc;
+  --border:      #e2e8f0;
+  --primary:     #1e3a5f;
+  --primary-lt:  #2e5f8f;
+  --accent:      #2e86ab;
+  --accent-lt:   #5ba4c8;
+  --gold:        #f0a500;
+  --success:     #27ae60;
+  --warning:     #e67e22;
+  --danger:      #e74c3c;
+  --text:        #1a202c;
+  --text-2:      #4a5568;
+  --text-3:      #718096;
+  --user-bubble: #1e3a5f;
+  --bot-bubble:  #ffffff;
+  --shadow:      0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:   0 4px 16px rgba(0,0,0,.12);
+  --radius:      12px;
+  --radius-sm:   8px;
+  --font:        'Inter', system-ui, sans-serif;
+  --mono:        'JetBrains Mono', monospace;
+  --sidebar-w:   300px;
+}
+[data-theme="dark"]{
+  --bg:          #0f172a;
+  --surface:     #1e293b;
+  --surface2:    #162032;
+  --border:      #334155;
+  --text:        #f1f5f9;
+  --text-2:      #94a3b8;
+  --text-3:      #64748b;
+  --user-bubble: #2e5f8f;
+  --bot-bubble:  #1e293b;
+  --shadow:      0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
+}
+
+html,body{height:100%;font-family:var(--font);background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+
+/* ── Layout ─────────────────────────────────────────────────────────── */
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* Header */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:60px;background:var(--primary);
+  color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2);
+  z-index:100;
+}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:22px}
+.header-title{font-size:16px;font-weight:700;letter-spacing:.3px}
+.header-subtitle{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px}
+.header-right{display:flex;align-items:center;gap:12px}
+.status-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--success);
+  box-shadow:0 0 6px var(--success);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.status-label{font-size:12px;color:rgba(255,255,255,.8)}
+.theme-btn{
+  background:rgba(255,255,255,.15);border:none;border-radius:8px;
+  color:#fff;cursor:pointer;padding:6px 10px;font-size:16px;
+  transition:background .2s;
+}
+.theme-btn:hover{background:rgba(255,255,255,.25)}
+
+/* Body: sidebar + main */
+.body{display:flex;flex:1;overflow:hidden}
+
+/* Sidebar */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:var(--surface);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  overflow:hidden;
+}
+.sidebar-section{padding:16px;border-bottom:1px solid var(--border)}
+.sidebar-section:last-child{border-bottom:none;flex:1;overflow-y:auto}
+.sidebar-label{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--text-3);margin-bottom:10px;
+}
+
+/* Upload zone */
+.upload-zone{
+  border:2px dashed var(--border);border-radius:var(--radius);
+  padding:20px;text-align:center;cursor:pointer;
+  transition:border-color .2s, background .2s;
+  background:var(--surface2);
+}
+.upload-zone:hover,.upload-zone.drag-over{
+  border-color:var(--accent);background:rgba(46,134,171,.05);
+}
+.upload-zone-icon{font-size:28px;margin-bottom:8px}
+.upload-zone-text{font-size:12px;color:var(--text-2);line-height:1.4}
+.upload-zone input{display:none}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:8px 14px;border:none;border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-lt)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{filter:brightness(1.1)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{filter:brightness(1.1)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface2)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-block{width:100%}
+
+/* KB sources list */
+.kb-source{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;background:var(--surface2);border-radius:var(--radius-sm);
+  margin-bottom:6px;font-size:12px;color:var(--text-2);
+  border:1px solid var(--border);
+}
+.kb-source-icon{font-size:16px;flex-shrink:0}
+.kb-source-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{
+  display:inline-flex;align-items:center;padding:2px 7px;
+  border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.3px;
+}
+.badge-blue{background:rgba(46,134,171,.15);color:var(--accent)}
+.badge-green{background:rgba(39,174,96,.15);color:var(--success)}
+.badge-orange{background:rgba(230,126,34,.15);color:var(--warning)}
+.badge-red{background:rgba(231,76,60,.15);color:var(--danger)}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.stat-card{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 12px;
+}
+.stat-value{font-size:20px;font-weight:700;color:var(--primary);line-height:1}
+[data-theme="dark"] .stat-value{color:var(--accent-lt)}
+.stat-label{font-size:10px;color:var(--text-3);margin-top:3px}
+
+/* HITL panel */
+.hitl-entry{
+  background:var(--surface2);border:1px solid rgba(230,126,34,.3);
+  border-left:3px solid var(--warning);border-radius:var(--radius-sm);
+  padding:10px 12px;margin-bottom:8px;
+}
+.hitl-entry-query{font-size:12px;color:var(--text);margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hitl-entry-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.hitl-resolve-input{
+  width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);
+  padding:6px 8px;font-size:12px;font-family:var(--font);
+  resize:vertical;min-height:60px;margin-bottom:6px;
+}
+.hitl-resolve-input:focus{outline:none;border-color:var(--accent)}
+
+/* ── Main Chat Area ──────────────────────────────────────────────────── */
+.main{display:flex;flex-direction:column;flex:1;overflow:hidden}
+
+/* Tab bar */
+.tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  background:var(--surface);flex-shrink:0;
+}
+.tab{
+  padding:12px 20px;font-size:13px;font-weight:500;color:var(--text-3);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover:not(.active){color:var(--text-2)}
+.tab-badge{
+  background:var(--danger);color:#fff;border-radius:10px;
+  font-size:10px;padding:1px 6px;font-weight:700;
+}
+
+/* Tab panels */
+.tab-panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.tab-panel.active{display:flex}
+
+/* Chat messages */
+.chat-messages{
+  flex:1;overflow-y:auto;padding:20px;
+  display:flex;flex-direction:column;gap:16px;
+  scroll-behavior:smooth;
+}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* Welcome card */
+.welcome-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:24px;text-align:center;
+  max-width:480px;margin:auto;
+}
+.welcome-card h2{font-size:20px;margin-bottom:8px;color:var(--primary)}
+[data-theme="dark"] .welcome-card h2{color:var(--accent-lt)}
+.welcome-card p{font-size:13px;color:var(--text-2);line-height:1.6;margin-bottom:16px}
+.quick-prompts{display:flex;flex-direction:column;gap:8px;text-align:left}
+.quick-prompt{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 14px;
+  font-size:12px;color:var(--text-2);cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;gap:8px;
+}
+.quick-prompt:hover{border-color:var(--accent);color:var(--text);background:rgba(46,134,171,.05)}
+.quick-prompt-icon{font-size:16px;flex-shrink:0}
+
+/* Message row */
+.msg-row{display:flex;gap:10px;max-width:760px}
+.msg-row.user{flex-direction:row-reverse;margin-left:auto}
+.msg-row.bot{margin-right:auto}
+
+.msg-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  background:var(--primary);color:#fff;
+}
+.msg-row.user .msg-avatar{background:var(--accent)}
+
+.msg-content{flex:1;min-width:0}
+
+.msg-bubble{
+  padding:12px 16px;border-radius:var(--radius);
+  line-height:1.6;font-size:14px;word-wrap:break-word;
+  box-shadow:var(--shadow);
+}
+.msg-row.user  .msg-bubble{
+  background:var(--user-bubble);color:#fff;border-bottom-right-radius:4px;
+}
+.msg-row.bot   .msg-bubble{
+  background:var(--bot-bubble);color:var(--text);border-bottom-left-radius:4px;
+  border:1px solid var(--border);
+}
+.msg-row.system .msg-bubble{
+  background:rgba(230,126,34,.1);border:1px solid rgba(230,126,34,.3);
+  color:var(--text);border-radius:var(--radius);
+}
+
+.msg-meta{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  margin-top:6px;font-size:11px;color:var(--text-3);
+}
+.msg-row.user .msg-meta{justify-content:flex-end}
+
+/* Confidence bar */
+.conf-bar-wrap{display:flex;align-items:center;gap:6px;margin-top:8px}
+.conf-bar-label{font-size:11px;color:var(--text-3);white-space:nowrap}
+.conf-bar-track{
+  flex:1;height:4px;background:var(--border);border-radius:4px;overflow:hidden;
+}
+.conf-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.conf-bar-pct{font-size:11px;color:var(--text-3);white-space:nowrap}
+
+/* Sources accordion */
+.sources-toggle{
+  display:flex;align-items:center;gap:5px;margin-top:8px;
+  font-size:11px;color:var(--accent);cursor:pointer;
+  background:none;border:none;font-family:var(--font);padding:0;
+}
+.sources-toggle:hover{text-decoration:underline}
+.sources-list{
+  margin-top:6px;padding:8px 10px;background:var(--surface2);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-size:11px;color:var(--text-2);
+}
+.sources-list li{list-style:none;padding:2px 0;display:flex;align-items:center;gap:4px}
+.sources-list li::before{content:"📄";font-size:11px}
+.sources-hidden{display:none}
+
+/* HITL badge on message */
+.hitl-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(230,126,34,.15);border:1px solid rgba(230,126,34,.4);
+  color:var(--warning);border-radius:20px;
+  padding:3px 10px;font-size:11px;font-weight:600;margin-top:8px;
+}
+
+/* Typing indicator */
+.typing-row{display:flex;gap:10px;max-width:760px;margin-right:auto}
+.typing-bubble{
+  padding:12px 16px;background:var(--bot-bubble);border:1px solid var(--border);
+  border-radius:var(--radius);border-bottom-left-radius:4px;
+  box-shadow:var(--shadow);display:flex;gap:5px;align-items:center;
+}
+.dot{width:7px;height:7px;background:var(--text-3);border-radius:50%;animation:bounce 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* Chat input bar */
+.chat-input-bar{
+  border-top:1px solid var(--border);background:var(--surface);
+  padding:14px 20px;flex-shrink:0;
+}
+.chat-input-row{display:flex;gap:10px;align-items:flex-end}
+.chat-input-wrap{
+  flex:1;display:flex;align-items:flex-end;gap:8px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:24px;padding:10px 16px;
+  transition:border-color .2s;
+}
+.chat-input-wrap:focus-within{border-color:var(--accent)}
+.chat-input{
+  flex:1;border:none;background:transparent;color:var(--text);
+  font-family:var(--font);font-size:14px;resize:none;
+  outline:none;max-height:120px;line-height:1.5;
+}
+.chat-input::placeholder{color:var(--text-3)}
+.send-btn{
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:var(--accent);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;font-size:16px;
+}
+.send-btn:hover:not(:disabled){background:var(--accent-lt);transform:scale(1.05)}
+.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.clear-btn{
+  width:40px;height:40px;border:none;border-radius:50%;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text-3);cursor:pointer;font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.clear-btn:hover{color:var(--danger);border-color:var(--danger)}
+.input-hint{font-size:11px;color:var(--text-3);margin-top:6px;text-align:center}
+
+/* HITL Dashboard tab */
+.hitl-dashboard{flex:1;overflow-y:auto;padding:20px}
+.hitl-dash-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+}
+.hitl-dash-title{font-size:16px;font-weight:600;color:var(--text)}
+.hitl-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;margin-bottom:12px;
+  border-left:4px solid var(--warning);
+}
+.hitl-card.resolved{border-left-color:var(--success)}
+.hitl-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.hitl-card-query{font-size:13px;font-weight:500;color:var(--text);flex:1;margin-right:12px}
+.hitl-card-meta{font-size:11px;color:var(--text-3);margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap}
+.hitl-response-area{width:100%;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);
+  font-family:var(--font);font-size:13px;padding:10px;resize:vertical;
+  min-height:80px;margin-bottom:8px}
+.hitl-response-area:focus{outline:none;border-color:var(--accent)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-3)}
+.empty-state-icon{font-size:48px;margin-bottom:12px}
+.empty-state-text{font-size:14px}
+
+/* Toast */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 16px;
+  box-shadow:var(--shadow-lg);font-size:13px;
+  display:flex;align-items:center;gap:8px;
+  animation:slideIn .3s ease;min-width:240px;max-width:360px;
+}
+.toast.success{border-left:3px solid var(--success)}
+.toast.error{border-left:3px solid var(--danger)}
+.toast.info{border-left:3px solid var(--accent)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOut{from{transform:translateX(0);opacity:1}to{transform:translateX(100%);opacity:0}}
+
+/* Scrollbar for dark mode */
+[data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* Demo mode banner */
+.demo-banner{
+  background:rgba(240,165,0,.15);border-bottom:1px solid rgba(240,165,0,.3);
+  padding:8px 16px;font-size:12px;color:var(--warning);
+  text-align:center;flex-shrink:0;
+}
+
+/* Loading spinner */
+.spinner{
+  width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive sidebar toggle */
+.sidebar-toggle{display:none;background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
+@media(max-width:768px){
+  .sidebar{
+    position:fixed;left:0;top:60px;bottom:0;z-index:50;
+    transform:translateX(-100%);transition:transform .3s;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-toggle{display:block}
+  .body{position:relative}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <span class="logo">🛒</span>
+      <div>
+        <div class="header-title">ShopEase AI Support</div>
+        <div class="header-subtitle">RAG • LangGraph • HITL</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-label" id="statusLabel">Checking...</span>
+      <button class="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <!-- DEMO BANNER (shown when no API key) -->
+  <div class="demo-banner" id="demoBanner" style="display:none">
+    ⚡ <strong>Demo Mode</strong> — No Groq API key found. Get a <strong>free key</strong> at <a href="https://console.groq.com" target="_blank" style="color:var(--warning)">console.groq.com</a>, then add <code>GROQ_API_KEY=your_key</code> to your <code>.env</code> file.
+  </div>
+
+  <div class="body">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <!-- Knowledge Base -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">📚 Knowledge Base</div>
+        <div class="upload-zone" id="uploadZone"
+             ondragover="handleDragOver(event)" ondrop="handleDrop(event)"
+             ondragleave="this.classList.remove('drag-over')">
+          <input type="file" id="fileInput" accept=".pdf,.txt,.md"
+                 onchange="handleFileUpload(event)"/>
+          <div class="upload-zone-icon">📄</div>
+          <div class="upload-zone-text">
+            <strong>Drag & drop PDF or TXT</strong><br/>
+            or click to browse
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="btn btn-success btn-sm" style="flex:1"
+                  onclick="uploadZone.querySelector('input').click()">
+            ⬆ Upload
+          </button>
+          <button class="btn btn-primary btn-sm" style="flex:1"
+                  onclick="loadSampleKB()">
+            🎯 Load Sample
+          </button>
+        </div>
+      </div>
+
+      <!-- Sources -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">📋 Indexed Sources</div>
+        <div id="sourcesList">
+          <div style="font-size:12px;color:var(--text-3);text-align:center;padding:12px">
+            No documents indexed yet
+          </div>
+        </div>
+        <button class="btn btn-danger btn-sm btn-block" style="margin-top:8px"
+                onclick="clearKB()">🗑 Clear Knowledge Base</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">📊 System Stats</div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="statChunks">—</div>
+            <div class="stat-label">Chunks Indexed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statQueries">0</div>
+            <div class="stat-label">Queries Answered</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statEscalated">0</div>
+            <div class="stat-label">Escalated</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="statPending">0</div>
+            <div class="stat-label">HITL Pending</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-3)">
+          🤖 Model: <span id="statModel" style="color:var(--accent)">—</span>
+        </div>
+        <div style="margin-top:4px;font-size:11px;color:var(--text-3)">
+          🎯 Threshold: <span id="statThreshold" style="color:var(--accent)">—</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('chat')" id="tab-chat">
+          💬 Chat
+        </div>
+        <div class="tab" onclick="switchTab('hitl')" id="tab-hitl">
+          🧑‍💼 Agent Dashboard
+          <span class="tab-badge" id="hitlBadge" style="display:none">0</span>
+        </div>
+      </div>
+
+      <!-- Chat Panel -->
+      <div class="tab-panel active" id="panel-chat">
+        <div class="chat-messages" id="chatMessages">
+          <!-- Welcome card -->
+          <div class="welcome-card" id="welcomeCard">
+            <div style="font-size:48px;margin-bottom:12px">🤖</div>
+            <h2>ShopEase Support Assistant</h2>
+            <p>
+              Powered by RAG + LangGraph. I can answer questions about returns, shipping,
+              payments, orders, and account management based on our knowledge base.
+            </p>
+            <div style="margin-bottom:12px">
+              <div style="font-size:12px;color:var(--text-3);margin-bottom:8px">
+                💡 First, load the knowledge base using the sidebar →
+              </div>
+            </div>
+            <div class="quick-prompts" id="quickPrompts">
+              <div class="quick-prompt" onclick="sendQuickPrompt(this)">
+                <span class="quick-prompt-icon">📦</span> What is your return policy?
+              </div>
+              <div class="quick-prompt" onclick="sendQuickPrompt(this)">
+                <span class="quick-prompt-icon">🚚</span> How long does standard shipping take?
+              </div>
+              <div class="quick-prompt" onclick="sendQuickPrompt(this)">
+                <span class="quick-prompt-icon">💳</span> How do I apply a discount code?
+              </div>
+              <div class="quick-prompt" onclick="sendQuickPrompt(this)">
+                <span class="quick-prompt-icon">💰</span> When will I get my refund?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <div class="chat-input-row">
+            <button class="clear-btn" onclick="clearChat()" title="Clear conversation">🗑</button>
+            <div class="chat-input-wrap">
+              <textarea class="chat-input" id="chatInput" rows="1"
+                placeholder="Ask a question about orders, returns, shipping..."
+                onkeydown="handleKey(event)"
+                oninput="autoResize(this)"></textarea>
+            </div>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">
+              ➤
+            </button>
+          </div>
+          <div class="input-hint" id="inputHint">
+            Press <kbd>Enter</kbd> to send • <kbd>Shift+Enter</kbd> for new line
+          </div>
+        </div>
+      </div>
+
+      <!-- HITL Dashboard Panel -->
+      <div class="tab-panel" id="panel-hitl">
+        <div class="hitl-dashboard">
+          <div class="hitl-dash-header">
+            <div class="hitl-dash-title">🧑‍💼 Human Agent Dashboard</div>
+            <button class="btn btn-ghost btn-sm" onclick="loadHITLQueue()">↻ Refresh</button>
+          </div>
+          <div id="hitlQueue"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const API = '';   // empty = same origin
+let sessionId = 'sess-' + Math.random().toString(36).slice(2, 10);
+let queryCount = 0;
+let isLoading  = false;
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-btn').textContent = isDark ? '🌙' : '☀️';
+}
+
+// ── Sidebar toggle (mobile) ───────────────────────────────────────────────────
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab, .tab-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'hitl') loadHITLQueue();
+}
+
+// ── Toast notifications ───────────────────────────────────────────────────────
+function toast(message, type = 'info', duration = 3500) {
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'slideOut .3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, duration);
+}
+
+// ── API helpers ───────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || res.statusText);
+  }
+  return res.json();
+}
+
+async function apiUpload(path, formData) {
+  const res = await fetch(API + path, { method: 'POST', body: formData });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || res.statusText);
+  }
+  return res.json();
+}
+
+// ── Stats & Health ────────────────────────────────────────────────────────────
+async function refreshStats() {
+  try {
+    const data = await api('GET', '/api/stats');
+    document.getElementById('statChunks').textContent    = data.kb?.total_chunks ?? '—';
+    document.getElementById('statQueries').textContent   = data.queries?.total ?? 0;
+    document.getElementById('statEscalated').textContent = data.queries?.escalated ?? 0;
+    document.getElementById('statPending').textContent   = data.hitl?.PENDING ?? 0;
+    document.getElementById('statModel').textContent     = (data.llm_model || '—').replace('x-ai/', '');
+    document.getElementById('statThreshold').textContent = ((data.threshold || 0) * 100).toFixed(0) + '%';
+
+    // Status indicator
+    document.getElementById('statusDot').style.background   = '#27ae60';
+    document.getElementById('statusDot').style.boxShadow    = '0 0 6px #27ae60';
+    document.getElementById('statusLabel').textContent      = data.kb?.total_chunks > 0 ? 'KB Ready' : 'No KB Loaded';
+
+    // Demo mode banner
+    document.getElementById('demoBanner').style.display = data.demo_mode ? 'block' : 'none';
+
+    // Sources list
+    const sources = data.kb?.sources || [];
+    const sl = document.getElementById('sourcesList');
+    if (sources.length === 0) {
+      sl.innerHTML = '<div style="font-size:12px;color:var(--text-3);text-align:center;padding:12px">No documents indexed yet</div>';
+    } else {
+      sl.innerHTML = sources.map(s =>
+        `<div class="kb-source">
+          <span class="kb-source-icon">📄</span>
+          <span class="kb-source-name" title="${s}">${s}</span>
+          <span class="badge badge-blue">✓</span>
+        </div>`
+      ).join('');
+    }
+
+    // HITL badge
+    const pending = data.hitl?.PENDING || 0;
+    const badge = document.getElementById('hitlBadge');
+    badge.textContent  = pending;
+    badge.style.display = pending > 0 ? 'inline-flex' : 'none';
+
+  } catch (e) {
+    document.getElementById('statusDot').style.background  = '#e74c3c';
+    document.getElementById('statusDot').style.boxShadow   = '0 0 6px #e74c3c';
+    document.getElementById('statusLabel').textContent     = 'Offline';
+  }
+}
+
+// ── Knowledge Base ────────────────────────────────────────────────────────────
+function handleDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag-over');
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) uploadFile(file);
+}
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (file) uploadFile(file);
+}
+
+async function uploadFile(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  toast(`Uploading ${file.name}…`, 'info');
+  try {
+    const result = await apiUpload('/api/ingest/file', fd);
+    toast(`✨ ${result.message}`, 'success', 5000);
+    refreshStats();
+  } catch (e) {
+    toast(`Upload failed: ${e.message}`, 'error');
+  }
+}
+
+async function loadSampleKB() {
+  toast('Loading ShopEase sample knowledge base…', 'info');
+  try {
+    const result = await api('POST', '/api/ingest/sample');
+    toast(`🎉 ${result.message}`, 'success', 5000);
+    refreshStats();
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+async function clearKB() {
+  if (!confirm('Clear the entire knowledge base? This cannot be undone.')) return;
+  try {
+    await api('DELETE', '/api/kb/clear');
+    toast('Knowledge base cleared.', 'success');
+    refreshStats();
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+// ── Chat ──────────────────────────────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function sendQuickPrompt(el) {
+  const text = el.textContent.trim().replace(/^[^\s]+\s/, '');
+  document.getElementById('chatInput').value = text;
+  document.getElementById('welcomeCard').style.display = 'none';
+  sendMessage();
+}
+
+function clearChat() {
+  const mc = document.getElementById('chatMessages');
+  const wc = document.getElementById('welcomeCard');
+  mc.innerHTML = '';
+  mc.appendChild(wc);
+  wc.style.display = '';
+}
+
+function appendMessage(role, content, meta = {}) {
+  const mc = document.getElementById('chatMessages');
+  const wc = document.getElementById('welcomeCard');
+  if (wc) wc.style.display = 'none';
+
+  const row = document.createElement('div');
+  row.className = `msg-row ${role}`;
+
+  // Avatar
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'user' ? '👤' : (meta.escalated ? '🧑‍💼' : '🤖');
+
+  // Content wrapper
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'msg-content';
+
+  // Bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  // Render markdown-lite: bold **text**
+  bubble.innerHTML = content
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br/>');
+  contentDiv.appendChild(bubble);
+
+  // Bot extras
+  if (role === 'bot') {
+    // HITL badge
+    if (meta.escalated) {
+      const badge = document.createElement('div');
+      badge.className = 'hitl-badge';
+      badge.innerHTML = `🧑‍💼 Escalated to Human Agent ${meta.ticketId ? '• Ticket: ' + meta.ticketId : ''}`;
+      contentDiv.appendChild(badge);
+    }
+
+    // Confidence bar
+    if (meta.confidence !== undefined && meta.confidence > 0) {
+      const pct  = Math.round(meta.confidence * 100);
+      const color = pct >= 70 ? '#27ae60' : pct >= 50 ? '#e67e22' : '#e74c3c';
+      const confDiv = document.createElement('div');
+      confDiv.className = 'conf-bar-wrap';
+      confDiv.innerHTML = `
+        <span class="conf-bar-label">Confidence</span>
+        <div class="conf-bar-track">
+          <div class="conf-bar-fill" style="width:${pct}%;background:${color}"></div>
+        </div>
+        <span class="conf-bar-pct">${pct}%</span>`;
+      contentDiv.appendChild(confDiv);
+    }
+
+    // Sources
+    if (meta.sources && meta.sources.length > 0) {
+      const toggle = document.createElement('button');
+      toggle.className = 'sources-toggle';
+      toggle.innerHTML = `📎 ${meta.sources.length} source${meta.sources.length > 1 ? 's' : ''} ▾`;
+      const list = document.createElement('ul');
+      list.className = 'sources-list sources-hidden';
+      meta.sources.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        list.appendChild(li);
+      });
+      toggle.onclick = () => {
+        const hidden = list.classList.toggle('sources-hidden');
+        toggle.innerHTML = `📎 ${meta.sources.length} source${meta.sources.length > 1 ? 's' : ''} ${hidden ? '▾' : '▴'}`;
+      };
+      contentDiv.appendChild(toggle);
+      contentDiv.appendChild(list);
+    }
+
+    // Meta row
+    const metaDiv = document.createElement('div');
+    metaDiv.className = 'msg-meta';
+    const parts = [];
+    if (meta.intent)    parts.push(`🏷 ${meta.intent.replace('_',' ')}`);
+    if (meta.latency)   parts.push(`⚡ ${meta.latency}ms`);
+    if (meta.queryId)   parts.push(`#${meta.queryId.slice(0, 6).toUpperCase()}`);
+    metaDiv.textContent = parts.join('  ·  ');
+    if (parts.length) contentDiv.appendChild(metaDiv);
+  }
+
+  row.appendChild(avatar);
+  row.appendChild(contentDiv);
+  mc.appendChild(row);
+  mc.scrollTop = mc.scrollHeight;
+  return row;
+}
+
+function showTyping() {
+  const mc = document.getElementById('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'typing-row';
+  row.id = 'typingIndicator';
+  row.innerHTML = `
+    <div class="msg-avatar" style="background:var(--primary)">🤖</div>
+    <div class="typing-bubble">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>`;
+  mc.appendChild(row);
+  mc.scrollTop = mc.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  if (isLoading) return;
+  const input = document.getElementById('chatInput');
+  const query = input.value.trim();
+  if (!query) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('sendBtn').disabled = true;
+  isLoading = true;
+
+  // Append user message
+  appendMessage('user', query);
+  showTyping();
+  queryCount++;
+  document.getElementById('statQueries').textContent = queryCount;
+
+  try {
+    const result = await api('POST', '/api/query', {
+      user_query: query,
+      session_id: sessionId,
+    });
+
+    hideTyping();
+
+    // Extract ticket ID from answer if escalated
+    let ticketId = '';
+    if (result.escalated) {
+      const match = result.answer.match(/\*\*([A-F0-9]{8})\*\*/);
+      ticketId = match ? match[1] : '';
+    }
+
+    appendMessage('bot', result.answer, {
+      confidence: result.confidence,
+      sources:    result.sources || [],
+      escalated:  result.escalated,
+      intent:     result.intent,
+      latency:    result.latency_ms,
+      queryId:    result.query_id,
+      ticketId,
+    });
+
+    if (result.escalated) {
+      refreshStats();
+      document.getElementById('hitlBadge').style.display = 'inline-flex';
+    }
+
+    if (result.error) {
+      toast(`Note: ${result.error}`, 'info');
+    }
+
+  } catch (e) {
+    hideTyping();
+    appendMessage('bot', `Sorry, something went wrong: ${e.message}. Please try again.`);
+    toast(`Error: ${e.message}`, 'error');
+  } finally {
+    document.getElementById('sendBtn').disabled = false;
+    isLoading = false;
+    input.focus();
+  }
+}
+
+// ── HITL Dashboard ────────────────────────────────────────────────────────────
+async function loadHITLQueue() {
+  try {
+    const entries = await api('GET', '/api/hitl/all');
+    const container = document.getElementById('hitlQueue');
+
+    if (entries.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🎉</div>
+          <div class="empty-state-text">No escalated queries yet.<br/>All queries were handled automatically.</div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = entries.map(e => {
+      const isPending  = e.status === 'PENDING';
+      const isResolved = e.status === 'RESOLVED';
+      const ts = new Date(e.timestamp).toLocaleString();
+      const statusBadge = isPending
+        ? `<span class="badge badge-orange">⏳ Pending</span>`
+        : `<span class="badge badge-green">✅ Resolved</span>`;
+
+      return `
+        <div class="hitl-card ${isResolved ? 'resolved' : ''}" id="hitl-${e.query_id}">
+          <div class="hitl-card-header">
+            <div class="hitl-card-query">"${escapeHtml(e.user_query)}"</div>
+            ${statusBadge}
+          </div>
+          <div class="hitl-card-meta">
+            <span>🕐 ${ts}</span>
+            <span>🏷 ${(e.intent||'').replace('_',' ')}</span>
+            <span>⚠️ ${e.escalation_reason || 'unspecified'}</span>
+            <span>🆔 ${e.query_id.slice(0,8).toUpperCase()}</span>
+          </div>
+          ${e.retrieved_chunks && e.retrieved_chunks.length > 0 ? `
+            <details style="margin-bottom:10px">
+              <summary style="font-size:12px;color:var(--text-3);cursor:pointer">📚 ${e.retrieved_chunks.length} retrieved chunks</summary>
+              <div style="margin-top:6px;font-size:11px;color:var(--text-2);font-family:var(--mono);
+                background:var(--surface2);padding:8px;border-radius:6px;max-height:120px;overflow-y:auto">
+                ${e.retrieved_chunks.map(c => `[${c.source} p.${c.page} | ${(c.score*100).toFixed(0)}%] ${c.text.slice(0,120)}…`).join('<br/>')}
+              </div>
+            </details>` : ''}
+          ${isPending ? `
+            <textarea class="hitl-response-area" id="resp-${e.query_id}"
+              placeholder="Type your response to the customer here…"></textarea>
+            <div style="display:flex;gap:8px">
+              <input style="flex:1;border:1px solid var(--border);border-radius:6px;
+                background:var(--surface2);color:var(--text);padding:6px 10px;font-size:12px"
+                placeholder="Agent ID (optional)" id="agent-${e.query_id}"/>
+              <button class="btn btn-success btn-sm" onclick="resolveHITL('${e.query_id}')">
+                ✅ Submit Response
+              </button>
+            </div>` : `
+            <div style="background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);
+              border-radius:8px;padding:10px;font-size:13px;color:var(--text)">
+              <strong>Human Response:</strong><br/>${escapeHtml(e.human_response || '')}
+              <div style="font-size:11px;color:var(--text-3);margin-top:4px">
+                By ${e.agent_id || 'agent'} • ${e.resolved_at ? new Date(e.resolved_at).toLocaleString() : ''}
+              </div>
+            </div>`}
+        </div>`;
+    }).join('');
+  } catch (e) {
+    document.getElementById('hitlQueue').innerHTML =
+      `<div class="empty-state"><div class="empty-state-text">Error loading queue: ${e.message}</div></div>`;
+  }
+}
+
+async function resolveHITL(queryId) {
+  const response = document.getElementById(`resp-${queryId}`).value.trim();
+  const agentId  = document.getElementById(`agent-${queryId}`).value.trim() || 'human_agent';
+  if (!response) { toast('Please enter a response before submitting.', 'error'); return; }
+  try {
+    await api('POST', '/api/hitl/resolve', { query_id: queryId, human_response: response, agent_id: agentId });
+    toast('Response submitted successfully!', 'success');
+    loadHITLQueue();
+    refreshStats();
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+function escapeHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  refreshStats();
+  setInterval(refreshStats, 15000);   // refresh stats every 15s
+  document.getElementById('chatInput').focus();
+});
+</script>
+</body>
+</html>
